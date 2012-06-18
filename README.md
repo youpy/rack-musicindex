@@ -1,6 +1,6 @@
 # Rack::Musicindex
 
-TODO: Write a gem description
+A Rack middleware to publish directries containing media files as podcast
 
 ## Installation
 
@@ -18,7 +18,12 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    require 'sinatra'
+    require 'rack-musicindex'
+    
+    use Rack::MusicIndex, {
+      '/foo' => '/path/to/mp3s')
+    }
 
 ## Contributing
 
