@@ -1,4 +1,4 @@
-# Rack::Musicindex
+# rack-musicindex
 
 A Rack middleware to publish directries containing media files as podcast
 
