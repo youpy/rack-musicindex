@@ -36,6 +36,6 @@ describe Rack::MusicIndex do
 
     last_response.should be_ok
     last_response['Content-Type'].should eql('audio/mpeg')
-    last_response.body.should eql(open(fixture('/foo/test.mp3')).read)
+    last_response.body.should eql(open(fixture('/foo/test.mp3'), 'rb').read)
   end
 end
