@@ -22,7 +22,7 @@ Or install it yourself as:
     require 'rack-musicindex'
     
     use Rack::MusicIndex, {
-      '/foo' => '/path/to/mp3s')
+      '/foo' => '/path/to/mp3s'
     }
 
 ## Contributing
