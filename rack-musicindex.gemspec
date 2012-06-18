@@ -2,10 +2,10 @@
 require File.expand_path('../lib/rack/musicindex/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["TODO: Write your name"]
-  gem.email         = ["TODO: Write your email address"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.authors       = ["youpy"]
+  gem.email         = ["youpy@buycheapviagraonlinenow.com"]
+  gem.description   = %q{A Rack middleware to publish directries containing media files as podcast}
+  gem.summary       = %q{A Rack middleware to publish directries containing media files as podcast}
   gem.homepage      = ""
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
