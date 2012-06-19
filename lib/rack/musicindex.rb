@@ -10,20 +10,14 @@ module Rack
 
     def init(options)
       @dirs = options
-      @files = {}
-      @static_paths = {}
-      @dirs.each do |path, dir|
-        @files[path] = Dir[dir + '/*.mp3']
-        @files[path].each do |filename|
-          @static_paths[path + '/' + ::File.basename(filename)] = filename
-        end
-      end
     end
 
     def call(env)
       status, headers, response = @app.call(env)
 
       path_info = env['PATH_INFO']
+
+      update_files
 
       if dirs[path_info]
         headers['Content-Type'] = 'application/xml;charset=utf-8'
@@ -54,6 +48,18 @@ module Rack
 
     def static_paths
       @static_paths
+    end
+
+    def update_files
+      @files = {}
+      @static_paths = {}
+
+      dirs.each do |path, dir|
+        @files[path] = Dir[dir + '/*.mp3']
+        @files[path].each do |filename|
+          @static_paths[path + '/' + ::File.basename(filename)] = filename
+        end
+      end
     end
 
     def podcast(env)

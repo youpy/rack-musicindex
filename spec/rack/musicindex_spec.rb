@@ -4,10 +4,21 @@ require File.expand_path(File.dirname(__FILE__) + '/../test_app')
 set :environment, :test
 
 require 'nokogiri'
+require 'fileutils'
 
 describe Rack::MusicIndex do
   def app
     Sinatra::Application
+  end
+
+  before do
+    @mp3 = fixture('/foo/test2.mp3')
+  end
+
+  after do
+    if File.exist?(@mp3)
+      FileUtils.rm(@mp3)
+    end
   end
 
   it 'should index mp3s as podcast' do
@@ -29,6 +40,29 @@ describe Rack::MusicIndex do
     item.xpath('link')[0].content.should eql('http://example.org/foo/test.mp3')
     item.xpath('guid')[0].content.should eql('http://example.org/foo/test.mp3')
     item.xpath('enclosure')[0]['url'].should eql('http://example.org/foo/test.mp3')
+  end
+
+  it 'should reflect file changes without restart' do
+    get '/foo'
+
+    xml = Nokogiri::XML(last_response.body)
+    xml.xpath('//item').size.should eql(1)
+
+    open(@mp3, 'w') do |f|
+      f.write('xxx')
+    end
+
+    get '/foo'
+
+    xml = Nokogiri::XML(last_response.body)
+    xml.xpath('//item').size.should eql(2)
+
+    FileUtils.rm(@mp3)
+
+    get '/foo'
+
+    xml = Nokogiri::XML(last_response.body)
+    xml.xpath('//item').size.should eql(1)
   end
 
   it 'should return mp3' do
