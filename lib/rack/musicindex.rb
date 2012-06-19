@@ -15,37 +15,48 @@ module Rack
     end
 
     def call(env)
-      status, headers, response = @app.call(env)
-
       path_info = env['PATH_INFO']
 
       update_files
 
       if dirs[path_info]
-        headers['Content-Type'] = 'application/xml;charset=utf-8'
-        body = podcast(env)
-        headers["Content-Length"] = body.length.to_s
-        response = [body]
-        status = 200
+        serve_podcast(env)
       elsif static_paths.include?(path_info)
-        body = open(static_paths[path_info], 'rb').read
-        headers["Content-Type"] = 'audio/mpeg'
-        headers["Content-Length"] = body.length.to_s
-        response = [body]
-        status = 200
+        serve_mp3(env)
+      else
+        status, headers, response = @app.call(env)
       end
-
-      [status, headers, response]
     end
 
     private
+
+    def serve_podcast(env)
+      status, headers, response = @app.call(env)
+
+      body = podcast(env)
+      headers['Content-Type'] = 'application/xml;charset=utf-8'
+      headers["Content-Length"] = body.length.to_s
+
+      [200, headers, [body]]
+    end
+
+    def serve_mp3(env)
+      status, headers, response = @app.call(env)
+      path_info = env['PATH_INFO']
+
+      body = open(static_paths[path_info], 'rb').read
+      headers["Content-Type"] = 'audio/mpeg'
+      headers["Content-Length"] = body.length.to_s
+
+      [200, headers, [body]]
+    end
 
     def dirs
       @dirs
     end
 
-    def files(media_dir)
-      @files[media_dir]
+    def files(path)
+      @files[path]
     end
 
     def static_paths
