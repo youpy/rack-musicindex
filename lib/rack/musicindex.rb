@@ -35,7 +35,7 @@ module Rack
 
       body = podcast(env)
       headers['Content-Type'] = 'application/xml;charset=utf-8'
-      headers["Content-Length"] = body.length.to_s
+      headers["Content-Length"] = body.bytesize.to_s
 
       [200, headers, [body]]
     end
@@ -46,7 +46,7 @@ module Rack
 
       body = open(static_paths[path_info], 'rb').read
       headers["Content-Type"] = 'audio/mpeg'
-      headers["Content-Length"] = body.length.to_s
+      headers["Content-Length"] = body.bytesize.to_s
 
       [200, headers, [body]]
     end
