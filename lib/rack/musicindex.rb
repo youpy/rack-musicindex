@@ -1,4 +1,6 @@
 require 'builder'
+require 'id3lib'
+require 'kconv'
 
 module Rack
   class MusicIndex
@@ -62,6 +64,29 @@ module Rack
       end
     end
 
+    def id3(filename)
+      value = {}
+      tag = ID3Lib::Tag.new(filename)
+      {
+        :TIT2 => :name,
+        :TPE1 => :artist,
+      }.each do |id, key|
+        frame = tag.frame(id)
+
+        if frame
+          if frame[:textenc] == 1
+            v = Kconv.kconv(frame[:text] , Kconv::UTF8, Kconv::UTF16)
+          else
+            v = frame[:text]
+          end
+        end
+
+        value[key] = v
+      end
+
+      value
+    end
+
     def podcast(env)
       path  = env['PATH_INFO']
       req   = Rack::Request.new(env)
@@ -77,14 +102,23 @@ module Rack
           xml.link url
 
           files.each do |file|
+            tag = id3(file)
+            author = tag[:artist]
             name = ::File.basename(file)
             item_link = url + '/' + name
+
             xml.item do
-              xml.title name
+              xml.title tag[:name] || name
               xml.description name
               xml.link item_link
               xml.guid item_link
               xml.enclosure :url => item_link
+
+              if author
+                xml.author author
+                xml.itunes :author, author
+                xml.itunes :summary, author
+              end
             end
           end
         end

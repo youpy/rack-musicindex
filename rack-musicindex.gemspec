@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.version       = Rack::Musicindex::VERSION
 
   gem.add_dependency('builder')
+  gem.add_dependency('id3lib-ruby')
   gem.add_development_dependency('rspec', ['~> 2.8.0'])
   gem.add_development_dependency('rake')
   gem.add_development_dependency('sinatra')
