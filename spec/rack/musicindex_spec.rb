@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require File.expand_path(File.dirname(__FILE__) + '/../test_app')
 
@@ -37,9 +38,9 @@ describe Rack::MusicIndex do
 
     items.size.should eql(1)
     item.xpath('title')[0].content.should eql('bar')
-    item.xpath('link')[0].content.should eql('http://example.org/foo/test%20foo.mp3')
-    item.xpath('guid')[0].content.should eql('http://example.org/foo/test%20foo.mp3')
-    item.xpath('enclosure')[0]['url'].should eql('http://example.org/foo/test%20foo.mp3')
+    item.xpath('link')[0].content.should eql('http://example.org/foo/test%20foo%20%E3%81%82%E3%81%82%E3%81%82.mp3')
+    item.xpath('guid')[0].content.should eql('http://example.org/foo/test%20foo%20%E3%81%82%E3%81%82%E3%81%82.mp3')
+    item.xpath('enclosure')[0]['url'].should eql('http://example.org/foo/test%20foo%20%E3%81%82%E3%81%82%E3%81%82.mp3')
     item.xpath('author')[0].content.should eql('foo')
     item.xpath('itunes:author')[0].content.should eql('foo')
   end
@@ -68,10 +69,10 @@ describe Rack::MusicIndex do
   end
 
   it 'should return mp3' do
-    get '/foo/test%20foo.mp3'
+    get '/foo/test%20foo%20%E3%81%82%E3%81%82%E3%81%82.mp3'
 
     last_response.should be_ok
     last_response['Content-Type'].should eql('audio/mpeg')
-    last_response.body.should eql(open(fixture('/foo/test foo.mp3'), 'rb').read)
+    last_response.body.should eql(open(fixture('/foo/test foo あああ.mp3'), 'rb').read)
   end
 end
