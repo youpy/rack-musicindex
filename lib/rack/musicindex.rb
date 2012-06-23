@@ -132,7 +132,6 @@ module Rack
               if author
                 xml.author author
                 xml.itunes :author, author
-                xml.itunes :summary, author
               end
             end
           end
