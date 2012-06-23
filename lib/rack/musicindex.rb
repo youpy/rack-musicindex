@@ -21,7 +21,7 @@ module Rack
 
       if dirs[path_info]
         serve_podcast(env)
-      elsif static_paths.include?(URI.unescape(path_info))
+      elsif static_paths.include?(unescape(path_info))
         serve_mp3(env)
       else
         status, headers, response = @app.call(env)
@@ -46,7 +46,7 @@ module Rack
       status, headers, response = @app.call(env)
 
       method = env['REQUEST_METHOD']
-      path_info = URI.unescape(env['PATH_INFO'])
+      path_info = unescape(env['PATH_INFO'])
       body = open(static_paths[path_info], 'rb').read
 
       headers["Content-Type"] = 'audio/mpeg'
@@ -120,7 +120,7 @@ module Rack
             tag = id3(file)
             author = tag[:artist]
             name = ::File.basename(file)
-            item_link = URI.escape(url + '/' + name)
+            item_link = escape(url + '/' + name)
 
             xml.item do
               xml.title tag[:name] || name
@@ -137,6 +137,14 @@ module Rack
           end
         end
       end
+    end
+
+    def escape(str)
+      URI.escape(str)
+    end
+
+    def unescape(str)
+      URI.unescape(str)
     end
   end
 end
