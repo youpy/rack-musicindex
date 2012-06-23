@@ -33,22 +33,26 @@ module Rack
     def serve_podcast(env)
       status, headers, response = @app.call(env)
 
+      method = env['REQUEST_METHOD']
       body = podcast(env)
+
       headers['Content-Type'] = 'application/xml;charset=utf-8'
       headers["Content-Length"] = body.bytesize.to_s
 
-      [200, headers, [body]]
+      [200, headers, method == 'GET' ? [body] : []]
     end
 
     def serve_mp3(env)
       status, headers, response = @app.call(env)
-      path_info = URI.unescape(env['PATH_INFO'])
 
+      method = env['REQUEST_METHOD']
+      path_info = URI.unescape(env['PATH_INFO'])
       body = open(static_paths[path_info], 'rb').read
+
       headers["Content-Type"] = 'audio/mpeg'
       headers["Content-Length"] = body.bytesize.to_s
 
-      [200, headers, [body]]
+      [200, headers, method == 'GET' ? [body] : []]
     end
 
     def dirs
