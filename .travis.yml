@@ -1,3 +1,6 @@
 before_install:
- - sudo apt-get update
- - sudo apt-get install id3lib-devel
+  - sudo aptitude -y install libid3-dev 
+rvm:
+  - 1.8.7
+  - 1.9.2
+  - 1.9.3
