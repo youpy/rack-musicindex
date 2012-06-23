@@ -17,6 +17,9 @@ module Rack
     def call(env)
       path_info = env['PATH_INFO']
 
+      # to compare with static_path which is utf-8 encoding
+      path_info.force_encoding('UTF-8') if path_info.respond_to? :force_encoding
+
       update_files
 
       if dirs[path_info]
