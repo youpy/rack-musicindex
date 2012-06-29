@@ -1,6 +1,6 @@
 # rack-musicindex [![Build Status](https://secure.travis-ci.org/youpy/rack-musicindex.png)](http://travis-ci.org/youpy/rack-musicindex)
 
-A Rack middleware to publish directries containing media files as podcast
+A Rack middleware to publish directories containing media files as podcast
 
 ## Installation
 
